@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import * as Redux from 'redux';
 import * as ReactRedux from 'react-redux';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
 import thunk from 'redux-thunk';
 import { mainReducer } from './reducers/MainReducer';
 
@@ -25,5 +24,3 @@ const mainComponent = (
 );
 
 ReactDOM.render(mainComponent, document.getElementById('root') || document.createElement('div'));
-
-registerServiceWorker();

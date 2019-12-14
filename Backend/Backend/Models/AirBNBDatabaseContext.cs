@@ -22,7 +22,7 @@ namespace Backend.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                "Server=localhost;Database=AirBNBDatabase;User Id=airbnbuser;Password=P@ssw0rd;");
+                "Server=localhost;Database=AirBNB; Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
