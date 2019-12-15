@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
+using Nest;
 
 namespace Backend.Controllers
 {
@@ -27,8 +28,7 @@ namespace Backend.Controllers
         [HttpGet("locations")]
         public IEnumerable<Locations> index()
         {
-            var listings = _context.Listings.Select(x => new Locations{ Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude} ).ToArray();
-
+            var listings = _context.Listings.Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude } ).ToArray();
             return listings;
         }
 

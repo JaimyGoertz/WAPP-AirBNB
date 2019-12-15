@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -63,7 +64,7 @@ namespace Backend.Models
         public string Country { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
-        public string IsLocationExact { get; set; }
+        public double? IsLocationExact { get; set; }
         public string PropertyType { get; set; }
         public string RoomType { get; set; }
         public int? Accommodates { get; set; }

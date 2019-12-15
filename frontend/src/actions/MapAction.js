@@ -1,23 +1,22 @@
 export function getLocationsChangeAction() {
 	return async (dispatch) => {
-		const data = await fetch(`http://localhost:44337/Listings/locations`, {
-			method: 'GET',
-			headers: { 'Content-Type': 'application/json' }
-		});
-		const content = await data.json();
-		console.log(content);
-		if (content.error) {
-			throw new Error('Data incorrect');
-		} else {
-			dispatch(handleSaveLocationsAction(content));
-		}
+		return await fetch(`https://localhost:5001/listings/locations`)
+			.then((locations) => {
+				return locations.json();
+			})
+			.then((content) => {
+				dispatch(handleSaveLocationsAction(content));
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 }
 
 function handleSaveLocationsAction(content) {
 	console.log(content);
 	return {
-		type: 'handleSaveLocationsAction',
-		locations: content
+		type: 'saveLocationsAction',
+		value: content
 	};
 }
