@@ -18,8 +18,8 @@ export class NavBar extends Component {
 								</Link>
 							</NavItem>
 							<NavItem>
-								<Link className="text-nav" to="/">
-									2
+								<Link className="text-nav" to="/map">
+									Map
 								</Link>
 							</NavItem>
 							<NavItem>

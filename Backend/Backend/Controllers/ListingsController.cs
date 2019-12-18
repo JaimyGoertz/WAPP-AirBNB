@@ -26,10 +26,9 @@ namespace Backend.Controllers
 
         // GET: Listings
         [HttpGet("locations")]
-        public IEnumerable<Locations> index()
+        public async Task<ActionResult<IEnumerable<Locations>>> GetLocations()
         {
-            var listings = _context.Listings.Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude } ).ToArray();
-            return listings;
+            return await _context.Listings.Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
         }
 
         // GET: api/Listings/5
@@ -44,6 +43,12 @@ namespace Backend.Controllers
             }
 
             return listings;
+        }
+
+        [HttpGet("details/{id}")]
+        public async Task<ActionResult<IEnumerable<LocationDetails>>> GetLocationDetails(int id)
+        {
+            return await _context.Listings.Where(x => x.Id == id).Select(x => new LocationDetails { Id = x.Id, Name = x.Name, Hostname = x.HostName, RoomType = x.RoomType }).ToListAsync();
         }
 
         // PUT: api/Listings/5

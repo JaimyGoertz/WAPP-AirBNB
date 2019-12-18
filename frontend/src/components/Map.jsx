@@ -4,7 +4,7 @@ import mapMarker from '../images/map-marker.png';
 import * as geoDataLocations from '../geoData/airbnblocations.json';
 import { connect } from 'react-redux';
 import { NavBar } from './NavBar';
-import { getLocationsChangeAction } from '../actions/MapAction';
+import { getLocationsChangeAction, getLocationDetailsAction } from '../actions/MapAction';
 
 class MapUI extends Component {
 	constructor(props) {
@@ -26,6 +26,7 @@ class MapUI extends Component {
 		if (this.props.locations != undefined) {
 			return (
 				<div>
+					<NavBar />
 					<ReactMapGL
 						{...this.state.viewport}
 						onViewportChange={(viewport) => this.setState({ viewport })}
@@ -59,14 +60,7 @@ class MapUI extends Component {
 								<button
 									style={{ background: 'none', border: 'none', cursor: 'pointer' }}
 									onClick={(e) => {
-										this.setState({
-											selectedLocation: {
-												name: location.properties.name,
-												id: location.properties.id,
-												hostname: location.properties.host_name,
-												roomType: location.properties.room_type
-											}
-										});
+										this.props.getLocationDetailsDispatcher(location.id);
 									}}
 								>
 									<img width="20px" height="20px" src={mapMarker} />
@@ -82,22 +76,22 @@ class MapUI extends Component {
 	}
 
 	getSelectedLocation = () => {
-		// if (this.state.selectedLocation != null) {
-		// 	return (
-		// 		<div>
-		// 			<h3>Name</h3>
-		// 			{this.state.selectedLocation.name}
-		// 			<h3>Id</h3>
-		// 			{this.state.selectedLocation.id}
-		// 			<h3>Hostname</h3>
-		// 			{this.state.selectedLocation.hostname}
-		// 			<h3>roomType</h3>
-		// 			{this.state.selectedLocation.roomType}
-		// 		</div>
-		// 	);
-		// } else {
-		// 	return <div>select a location</div>;
-		// }
+		if (this.props.locationDetails != undefined) {
+			return (
+				<div>
+					<h3>Name</h3>
+					{this.props.locationDetails[0].name}
+					<h3>Id</h3>
+					{this.props.locationDetails[0].id}
+					<h3>Hostname</h3>
+					{this.props.locationDetails[0].hostname}
+					<h3>RoomType</h3>
+					{this.props.locationDetails[0].roomType}
+				</div>
+			);
+		} else {
+			return <div>select a location</div>;
+		}
 	};
 
 	convert(coordinate, position) {
@@ -112,13 +106,15 @@ class MapUI extends Component {
 
 function mapDispatchToProps(dispatch) {
 	return {
+		getLocationDetailsDispatcher: (id) => dispatch(getLocationDetailsAction(id)),
 		getLocationsDispatcher: () => dispatch(getLocationsChangeAction())
 	};
 }
 
 function mapStateToProps(state) {
 	return {
-		locations: state.mapReducer.locations
+		locations: state.mapReducer.locations,
+		locationDetails: state.mapReducer.locationDetails
 	};
 }
 
