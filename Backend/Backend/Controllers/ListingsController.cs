@@ -6,128 +6,41 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
-using Nest;
+using Backend.Repositories;
+using GeoJSON.Net.Feature;
 
 namespace Backend.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class ListingsController : Controller
+    public class ListingsController : ControllerBase
     {
-        private readonly AirBNBDatabaseContext _context;
+        private readonly IListingsRepository _listingsRepository;
 
-        public ListingsController(AirBNBDatabaseContext context)
+        public ListingsController(IListingsRepository listingsRepository)
         {
-            _context = context;
+            _listingsRepository = listingsRepository;
         }
 
-        // GET: api/Listings
-
-
-        // GET: Listings
+        // GET: locations
         [HttpGet("locations")]
-        public async Task<ActionResult<IEnumerable<Locations>>> GetLocations()
+        public async Task<string> GetLocations()
         {
-            return await _context.Listings.Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
-        }
-
-        // GET: api/Listings/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Listings>> GetListings(int id)
-        {
-            var listings = await _context.Listings.FindAsync(id);
-
-            if (listings == null)
-            {
-                return NotFound();
-            }
-
-            return listings;
+            return await _listingsRepository.GetLocations();
         }
 
         [HttpGet("details/{id}")]
-        public async Task<ActionResult<IEnumerable<LocationDetails>>> GetLocationDetails(int id)
+        public async Task<IEnumerable<LocationDetails>> GetLocationDetails(int id)
         {
-            return await _context.Listings.Where(x => x.Id == id).Select(x => new LocationDetails { Id = x.Id, Name = x.Name, Hostname = x.HostName, RoomType = x.RoomType }).ToListAsync();
+
+            return await _listingsRepository.GetLocationDetails(id);
         }
 
-        // PUT: api/Listings/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutListings(int id, Listings listings)
+        // GET: Listings/5
+        [HttpGet("{id}")]
+        public async Task<Listings> GetListings(int id)
         {
-            if (id != listings.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(listings).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ListingsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Listings
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Listings>> PostListings(Listings listings)
-        {
-            _context.Listings.Add(listings);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ListingsExists(listings.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetListings", new { id = listings.Id }, listings);
-        }
-
-        // DELETE: api/Listings/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Listings>> DeleteListings(int id)
-        {
-            var listings = await _context.Listings.FindAsync(id);
-            if (listings == null)
-            {
-                return NotFound();
-            }
-
-            _context.Listings.Remove(listings);
-            await _context.SaveChangesAsync();
-
-            return listings;
-        }
-
-        private bool ListingsExists(int id)
-        {
-            return _context.Listings.Any(e => e.Id == id);
+            return await _listingsRepository.GetAsync(id);
         }
     }
 }

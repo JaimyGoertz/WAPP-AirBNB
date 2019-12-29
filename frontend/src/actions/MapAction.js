@@ -1,4 +1,5 @@
 export function getLocationDetailsAction(id) {
+	console.log(id);
 	return async (dispatch) => {
 		return await fetch(`http://localhost:5000/Listings/details/${id}`)
 			.then((details) => {

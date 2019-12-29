@@ -6,6 +6,7 @@ import * as ReactRedux from 'react-redux';
 import App from './App';
 import thunk from 'redux-thunk';
 import { mainReducer } from './reducers/MainReducer';
+import './index.css';
 
 const logger = (store) => (next) => (action) => {
 	console.log('ACTION:', action.type, action);

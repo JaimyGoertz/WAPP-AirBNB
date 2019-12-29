@@ -20,12 +20,12 @@ export function emailChangeAction(email) {
 }
 
 export function clickRegisterButtonAction(email, password, passwordRepeat) {
-	console.log(`http://localhost:2000/accounts/register`);
+	var role = 'user';
 	return async (dispatch) => {
-		const data = await fetch(`http://localhost:2000/accounts/register`, {
+		const data = await fetch(`https://localhost:5001/Users`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email, password, passwordRepeat })
+			body: JSON.stringify({ email, password, role })
 		});
 		const content = await data.json();
 		if (content.error) {

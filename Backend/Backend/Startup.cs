@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Backend.Repositories;
 
 namespace Backend
 {
@@ -36,8 +37,10 @@ namespace Backend
 
             services.AddDbContext<AirBNBDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            
             services.AddControllersWithViews();
+            services.AddTransient<IListingsRepository, ListingsRepository>();
+            services.AddTransient<IUsersRepository, UsersRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

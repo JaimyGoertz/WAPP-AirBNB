@@ -1,16 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Backend.Models
 {
     public partial class AirBNBDatabaseContext : DbContext
     {
-        public AirBNBDatabaseContext() { }
+        public AirBNBDatabaseContext()
+        {
+        }
 
-        public AirBNBDatabaseContext(DbContextOptions<AirBNBDatabaseContext> options) : base(options) { }
+        public AirBNBDatabaseContext(DbContextOptions<AirBNBDatabaseContext> options)
+            : base(options)
+        {
+        }
 
         public virtual DbSet<Calendar> Calendar { get; set; }
         public virtual DbSet<Listings> Listings { get; set; }
@@ -18,11 +21,14 @@ namespace Backend.Models
         public virtual DbSet<Reviews> Reviews { get; set; }
         public virtual DbSet<SummaryListings> SummaryListings { get; set; }
         public virtual DbSet<SummaryReviews> SummaryReviews { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(
-                "Server=localhost;Database=AirBNB; Trusted_Connection=True;");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=localhost;Database=AirBNB; Trusted_Connection=True;");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -311,6 +317,9 @@ namespace Backend.Models
             {
                 entity.ToTable("reviews");
 
+                entity.HasIndex(e => new { e.ListingId, e.Date })
+                    .HasName("listing_id_index");
+
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .ValueGeneratedNever();
@@ -389,6 +398,33 @@ namespace Backend.Models
                 entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.ListingId).HasColumnName("listing_id");
+            });
+
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.HasKey(e => e.UserId)
+                    .HasName("PK__users__CB9A1CFFB4CA1856");
+
+                entity.ToTable("users");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("userId")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Password)
+                    .HasColumnName("password")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Role)
+                    .HasColumnName("role")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("email")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

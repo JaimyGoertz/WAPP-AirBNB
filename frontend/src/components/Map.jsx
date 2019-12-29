@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import ReactMapGL, { Marker } from 'react-map-gl';
-import mapMarker from '../images/map-marker.png';
-import * as geoDataLocations from '../geoData/airbnblocations.json';
+import ReactMapGL, { Layer } from 'react-map-gl';
+import { Source } from 'react-map-gl';
 import { connect } from 'react-redux';
 import { NavBar } from './NavBar';
 import { getLocationsChangeAction, getLocationDetailsAction } from '../actions/MapAction';
+import { InfoBar } from './Infobar/Infobar';
+import '../css/Map.scss';
 
 class MapUI extends Component {
 	constructor(props) {
@@ -12,7 +13,7 @@ class MapUI extends Component {
 		this.props.getLocationsDispatcher();
 		this.state = {
 			viewport: {
-				width: '100vw',
+				width: '1044.4px',
 				height: '90vh',
 				latitude: 52.379189,
 				longitude: 4.899431,
@@ -22,52 +23,79 @@ class MapUI extends Component {
 		};
 	}
 
+	_onClick = (event) => {
+		const feature = event.features.find((f) => f.layer.id === 'unclustered-point');
+		if (feature !== undefined) this.props.getLocationDetailsDispatcher(feature.properties.id);
+	};
+
 	render() {
 		if (this.props.locations != undefined) {
 			return (
 				<div>
 					<NavBar />
-					<ReactMapGL
-						{...this.state.viewport}
-						onViewportChange={(viewport) => this.setState({ viewport })}
-						mapStyle="mapbox://styles/mapbox/streets-v9"
-						mapboxApiAccessToken={
-							'pk.eyJ1IjoiamFpbXlnb2VydHoiLCJhIjoiY2szcmFwbmtrMDg3bjNucGV2c2FjanN4OSJ9.QWDB0oASW97mqlrAvXPd8g'
-						}
-					>
-						<div
-							style={{
-								width: '15vw',
-								height: 'auto',
-								backgroundColor: 'lightgrey',
-								boxShadow: '2px 2px 4px #000000',
-								position: 'absolute',
-								left: 0,
-								top: 0,
-								zIndex: 10
-							}}
+					<div className="main">
+						<ReactMapGL
+							{...this.state.viewport}
+							onViewportChange={(viewport) => this.setState({ viewport })}
+							mapStyle="mapbox://styles/mapbox/streets-v9"
+							mapboxApiAccessToken={
+								'pk.eyJ1IjoiamFpbXlnb2VydHoiLCJhIjoiY2szcmFwbmtrMDg3bjNucGV2c2FjanN4OSJ9.QWDB0oASW97mqlrAvXPd8g'
+							}
+							onClick={this._onClick}
 						>
-							<h2>Selected location:</h2>
-							{this.getSelectedLocation()}
-						</div>
-						<Marker key={1} latitude={5.236575451387618} longitude={4.941419235184398} />
-						{this.props.locations.slice(0, 500).map((location) => (
-							<Marker
-								key={location.id}
-								latitude={this.convert(location.latitude, 2)}
-								longitude={this.convert(location.longitude, 1)}
+							<Source
+								id="source_id"
+								data={this.props.locations}
+								type="geojson"
+								cluster={true}
+								clusterMaxZoom={15}
+								clusterRadius={50}
 							>
-								<button
-									style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-									onClick={(e) => {
-										this.props.getLocationDetailsDispatcher(location.id);
+								<Layer
+									type="circle"
+									id="layer_id"
+									source="source_id"
+									paint={{
+										'circle-color': {
+											property: 'point_count',
+											type: 'interval',
+											stops: [ [ 0, '#ff0000' ], [ 100, '#f1f075' ], [ 750, '#f28cb1' ] ]
+										},
+										'circle-radius': {
+											property: 'point_count',
+											type: 'interval',
+											stops: [ [ 0, 10 ], [ 90, 20 ], [ 650, 30 ] ]
+										}
 									}}
-								>
-									<img width="20px" height="20px" src={mapMarker} />
-								</button>
-							</Marker>
-						))}
-					</ReactMapGL>
+									filter={[ 'has', 'point_count' ]}
+								/>
+								<Layer
+									id="unclustered-point"
+									type="circle"
+									source="source_id"
+									filter={[ '!has', 'point_count' ]}
+									paint={{
+										'circle-color': '#11b4da',
+										'circle-radius': 8,
+										'circle-stroke-width': 2,
+										'circle-stroke-color': '#fff'
+									}}
+								/>
+								<Layer
+									id="cluster-count"
+									type="symbol"
+									source="source_id"
+									filter={[ 'has', 'point_count' ]}
+									layout={{
+										'text-field': '{point_count_abbreviated}',
+										'text-font': [ 'DIN Offc Pro Medium', 'Arial Unicode MS Bold' ],
+										'text-size': 12
+									}}
+								/>
+							</Source>
+						</ReactMapGL>
+						<InfoBar />
+					</div>
 				</div>
 			);
 		} else {
@@ -76,7 +104,7 @@ class MapUI extends Component {
 	}
 
 	getSelectedLocation = () => {
-		if (this.props.locationDetails != undefined) {
+		if (this.props.locationDetails !== undefined) {
 			return (
 				<div>
 					<h3>Name</h3>
@@ -85,23 +113,14 @@ class MapUI extends Component {
 					{this.props.locationDetails[0].id}
 					<h3>Hostname</h3>
 					{this.props.locationDetails[0].hostname}
-					<h3>RoomType</h3>
+					<h3>roomType</h3>
 					{this.props.locationDetails[0].roomType}
 				</div>
 			);
 		} else {
-			return <div>select a location</div>;
+			return <div>Select a location</div>;
 		}
 	};
-
-	convert(coordinate, position) {
-		var stringNumber = coordinate.toString();
-		var begin = stringNumber.slice(0, position);
-		var end = stringNumber.slice(position);
-		var whole = begin + '.' + end;
-		var converted = parseFloat(whole);
-		return converted;
-	}
 }
 
 function mapDispatchToProps(dispatch) {
