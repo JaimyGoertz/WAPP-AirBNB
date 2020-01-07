@@ -27,6 +27,11 @@ export class NavBar extends Component {
 									Map
 								</Link>
 							</NavItem>
+							<NavItem>
+								<Link className="text-nav" to="/charts">
+									Charts
+								</Link>
+							</NavItem>
 						</ul>
 					</Container>
 				</Navbar>

@@ -26,8 +26,14 @@ namespace Backend.Repositories
 
         public async Task<string> GetLocations()
         {
-            var model = new FeatureCollection();
             var loc = await Context.Listings.Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
+            string json = convertToGeoJson(loc);
+            return json;
+        }
+
+        public string convertToGeoJson(List<Locations> loc)
+        {
+            var model = new FeatureCollection();
             foreach (Locations item in loc)
             {
                 item.Latitude = Double.Parse(item.Latitude.ToString().Insert(2, "."), CultureInfo.InvariantCulture);
@@ -46,7 +52,44 @@ namespace Backend.Repositories
 
         public async Task<IEnumerable<LocationDetails>> GetLocationDetails(int id)
         {
-            return await Context.Listings.Where(x => x.Id == id).Select(x => new LocationDetails { Id = x.Id, Name = x.Name, Hostname = x.HostName, RoomType = x.RoomType }).ToListAsync();
+            return await Context.Listings.Where(x => x.Id == id).Select(x => new LocationDetails { Id = x.Id, Name = x.Name, Hostname = x.HostName, RoomType = x.RoomType, Neighbourhood = x.Neighbourhood, Price = x.Price, ReviewScoresRating = x.ReviewScoresRating }).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Neighbourhoods>> GetNeighbourhoods()
+        {
+            List<Neighbourhoods> neighbourhoods = await Task.Run(() => Context.Listings.Select(n => new Neighbourhoods
+            {
+                Neighbourhood = n.Neighbourhood
+            }).Where(w => w.Neighbourhood != null).Distinct().ToListAsync());
+
+            return neighbourhoods;
+        }
+
+        public async Task<string> Filter(FilterObj filter)
+        {
+            var loc = new List<Locations> { };
+            if (filter.Neighbourhood == "All")
+            {
+                loc = await Context.Listings.Where(x => x.ReviewScoresRating > filter.Review && Convert.ToDouble(x.Price) < filter.Price).Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
+            }
+            else if (filter.Review == null && filter.Price == null)
+            {
+                loc = await Context.Listings.Where(x => x.Neighbourhood == filter.Neighbourhood).Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
+            }
+            else if (filter.Price == null)
+            {
+                loc = await Context.Listings.Where(x => x.Neighbourhood == filter.Neighbourhood && x.ReviewScoresRating > filter.Review).Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
+            }
+            else if (filter.Review == null)
+            {
+                loc = await Context.Listings.Where(x => x.Neighbourhood == filter.Neighbourhood && Convert.ToDouble(x.Price) < filter.Price).Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
+            }
+            else
+            {
+                loc = await Context.Listings.Where(x => x.Neighbourhood == filter.Neighbourhood && x.ReviewScoresRating > filter.Review && Convert.ToDouble(x.Price) < filter.Price).Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
+            }
+            string json = convertToGeoJson(loc);
+            return json;
         }
     }
 }

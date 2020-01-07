@@ -16,5 +16,10 @@ namespace Backend.Models
 
         public string RoomType { get; set; }
 
+        public string Neighbourhood { get; set; }
+
+        public string Price { get; set; }
+
+        public int? ReviewScoresRating { get; set; }
     }
 }

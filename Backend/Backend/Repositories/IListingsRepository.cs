@@ -13,5 +13,9 @@ namespace Backend.Repositories
     {
         Task<string> GetLocations();
         Task<IEnumerable<LocationDetails>> GetLocationDetails(int id);
+
+        Task<IEnumerable<Neighbourhoods>> GetNeighbourhoods();
+
+        Task<string> Filter(FilterObj filter);
     }
 }

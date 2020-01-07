@@ -43,84 +43,142 @@ class MapUI extends Component {
 							}
 							onClick={this._onClick}
 						>
-							<Source
-								id="source_id"
-								data={this.props.locations}
-								type="geojson"
-								cluster={true}
-								clusterMaxZoom={15}
-								clusterRadius={50}
-							>
-								<Layer
-									type="circle"
-									id="layer_id"
-									source="source_id"
-									paint={{
-										'circle-color': {
-											property: 'point_count',
-											type: 'interval',
-											stops: [ [ 0, '#ff0000' ], [ 100, '#f1f075' ], [ 750, '#f28cb1' ] ]
-										},
-										'circle-radius': {
-											property: 'point_count',
-											type: 'interval',
-											stops: [ [ 0, 10 ], [ 90, 20 ], [ 650, 30 ] ]
-										}
-									}}
-									filter={[ 'has', 'point_count' ]}
-								/>
-								<Layer
-									id="unclustered-point"
-									type="circle"
-									source="source_id"
-									filter={[ '!has', 'point_count' ]}
-									paint={{
-										'circle-color': '#11b4da',
-										'circle-radius': 8,
-										'circle-stroke-width': 2,
-										'circle-stroke-color': '#fff'
-									}}
-								/>
-								<Layer
-									id="cluster-count"
-									type="symbol"
-									source="source_id"
-									filter={[ 'has', 'point_count' ]}
-									layout={{
-										'text-field': '{point_count_abbreviated}',
-										'text-font': [ 'DIN Offc Pro Medium', 'Arial Unicode MS Bold' ],
-										'text-size': 12
-									}}
-								/>
-							</Source>
+							{this.sourceAndLayers()}
 						</ReactMapGL>
 						<InfoBar />
 					</div>
 				</div>
 			);
 		} else {
-			return <h1>Map is loading, please wait</h1>;
+			return (
+				<div>
+					<NavBar />
+					<div className="main">
+						<ReactMapGL
+							{...this.state.viewport}
+							onViewportChange={(viewport) => this.setState({ viewport })}
+							mapStyle="mapbox://styles/mapbox/streets-v9"
+							mapboxApiAccessToken={
+								'pk.eyJ1IjoiamFpbXlnb2VydHoiLCJhIjoiY2szcmFwbmtrMDg3bjNucGV2c2FjanN4OSJ9.QWDB0oASW97mqlrAvXPd8g'
+							}
+							onClick={this._onClick}
+						/>
+						<InfoBar />
+					</div>
+				</div>
+			);
 		}
 	}
 
-	getSelectedLocation = () => {
-		if (this.props.locationDetails !== undefined) {
+	sourceAndLayers() {
+		if (this.props.filter == true) {
 			return (
-				<div>
-					<h3>Name</h3>
-					{this.props.locationDetails[0].name}
-					<h3>Id</h3>
-					{this.props.locationDetails[0].id}
-					<h3>Hostname</h3>
-					{this.props.locationDetails[0].hostname}
-					<h3>roomType</h3>
-					{this.props.locationDetails[0].roomType}
-				</div>
+				<Source
+					id="source_id"
+					data={this.props.filteredLocations}
+					type="geojson"
+					cluster={true}
+					clusterMaxZoom={15}
+					clusterRadius={50}
+				>
+					<Layer
+						type="circle"
+						id="layer_id"
+						source="source_id"
+						paint={{
+							'circle-color': {
+								property: 'point_count',
+								type: 'interval',
+								stops: [ [ 0, '#ec5242' ], [ 100, '#3fb211' ], [ 750, '#FADA5E ' ] ]
+							},
+							'circle-radius': {
+								property: 'point_count',
+								type: 'interval',
+								stops: [ [ 0, 10 ], [ 90, 20 ], [ 650, 30 ] ]
+							}
+						}}
+						filter={[ 'has', 'point_count' ]}
+					/>
+					<Layer
+						id="unclustered-point"
+						type="circle"
+						source="source_id"
+						filter={[ '!has', 'point_count' ]}
+						paint={{
+							'circle-color': '#1396d9',
+							'circle-radius': 8,
+							'circle-stroke-width': 2,
+							'circle-stroke-color': '#fff'
+						}}
+					/>
+					<Layer
+						id="cluster-count"
+						type="symbol"
+						source="source_id"
+						filter={[ 'has', 'point_count' ]}
+						layout={{
+							'text-field': '{point_count_abbreviated}',
+							'text-font': [ 'DIN Offc Pro Medium', 'Arial Unicode MS Bold' ],
+							'text-size': 12
+						}}
+					/>
+				</Source>
 			);
 		} else {
-			return <div>Select a location</div>;
+			return (
+				<Source
+					id="source_id"
+					data={this.props.locations}
+					type="geojson"
+					cluster={true}
+					clusterMaxZoom={15}
+					clusterRadius={50}
+				>
+					<Layer
+						type="circle"
+						id="layer_id"
+						source="source_id"
+						paint={{
+							'circle-color': {
+								property: 'point_count',
+								type: 'interval',
+								stops: [ [ 0, '#ec5242' ], [ 100, '#3fb211' ], [ 750, '#FADA5E ' ] ]
+							},
+							'circle-radius': {
+								property: 'point_count',
+								type: 'interval',
+								stops: [ [ 0, 10 ], [ 90, 20 ], [ 650, 30 ] ]
+							}
+						}}
+						filter={[ 'has', 'point_count' ]}
+					/>
+					<Layer
+						id="unclustered-point"
+						type="circle"
+						source="source_id"
+						filter={[ '!has', 'point_count' ]}
+						paint={{
+							'circle-color': '#1396d9',
+							'circle-radius': 8,
+							'circle-stroke-width': 2,
+							'circle-stroke-color': '#fff'
+						}}
+					/>
+					<Layer
+						id="cluster-count"
+						type="symbol"
+						source="source_id"
+						filter={[ 'has', 'point_count' ]}
+						layout={{
+							'text-field': '{point_count_abbreviated}',
+							'text-font': [ 'DIN Offc Pro Medium', 'Arial Unicode MS Bold' ],
+							'text-size': 12
+						}}
+					/>
+				</Source>
+			);
 		}
-	};
+	}
 }
 
 function mapDispatchToProps(dispatch) {
@@ -133,7 +191,9 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
 	return {
 		locations: state.mapReducer.locations,
-		locationDetails: state.mapReducer.locationDetails
+		locationDetails: state.mapReducer.locationDetails,
+		filter: state.filterReducer.filter,
+		filteredLocations: state.filterReducer.locations
 	};
 }
 

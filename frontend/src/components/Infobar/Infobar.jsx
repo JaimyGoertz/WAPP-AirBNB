@@ -8,11 +8,11 @@ import { InfobarHeader } from './InfobarHeader';
 class InfoBarUI extends Component {
 	render() {
 		return (
-			<div>
+			<div className="Details">
 				<InfobarHeader />
 
 				<div className="details">
-					<h2>Selected location:</h2>
+					<h2 className="detailsHeader">Selected location details:</h2>
 					{this.getSelectedLocation()}
 				</div>
 			</div>
@@ -23,18 +23,22 @@ class InfoBarUI extends Component {
 		if (this.props.locationDetails !== undefined) {
 			return (
 				<div>
-					<h3>Name</h3>
+					<h3 className="detailsHeader">Name</h3>
 					{this.props.locationDetails[0].name}
-					<h3>Id</h3>
-					{this.props.locationDetails[0].id}
-					<h3>Host name</h3>
+					<h3 className="detailsHeader">Host name</h3>
 					{this.props.locationDetails[0].hostname}
-					<h3>Room Type</h3>
+					<h3 className="detailsHeader">Room Type</h3>
 					{this.props.locationDetails[0].roomType}
+					<h3 className="detailsHeader">Price</h3>
+					{'$' + this.props.locationDetails[0].price}
+					<h3 className="detailsHeader">Neighbourhood</h3>
+					{this.props.locationDetails[0].neighbourhood}
+					<h3 className="detailsHeader">Average review score</h3>
+					{this.props.locationDetails[0].reviewScoresRating}
 				</div>
 			);
 		} else {
-			return <div>Select a location</div>;
+			return <div className="detailsHeader">Select a location to see details</div>;
 		}
 	};
 }

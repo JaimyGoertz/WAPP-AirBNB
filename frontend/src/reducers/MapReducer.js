@@ -5,7 +5,9 @@ export function MapReducer(state = initialState, action) {
 		case 'saveLocationsAction':
 			return { ...state, locations: action.value };
 		case 'locationDetailsAction':
-			return { ...state, locationDetails: action.locationDetails };
+			return { ...state, locationDetails: action.value };
+		case 'handleSaveNeighbourhoodsAction':
+			return { ...state, neighbourhoods: action.value };
 		default:
 			return state;
 	}

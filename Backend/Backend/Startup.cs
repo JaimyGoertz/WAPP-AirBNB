@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Backend.Repositories;
+using Backend.Services;
+using StackExchange.Redis;
 
 namespace Backend
 {
@@ -41,6 +43,10 @@ namespace Backend
             services.AddControllersWithViews();
             services.AddTransient<IListingsRepository, ListingsRepository>();
             services.AddTransient<IUsersRepository, UsersRepository>();
+            services.AddTransient<IChartsRepository, ChartsRepository>();
+            services.AddTransient<IListingsCachingService, ListingsChachingService>();
+            services.AddTransient<INeighbourhoodCachingService, NeighbourhoodCachingService>();
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

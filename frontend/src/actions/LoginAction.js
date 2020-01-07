@@ -14,7 +14,7 @@ export function passwordChangeAction(password) {
 
 export function clickLoginButtonAction(email, password) {
 	return async (dispatch) => {
-		const data = await fetch(`http://localhost:2000/accounts/login`, {
+		const data = await fetch(`https://localhost:5001/accounts/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email, password })

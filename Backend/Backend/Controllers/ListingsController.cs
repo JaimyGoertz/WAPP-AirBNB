@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Backend.Models;
+﻿using Backend.Models;
 using Backend.Repositories;
-using GeoJSON.Net.Feature;
+using Backend.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
@@ -16,17 +13,36 @@ namespace Backend.Controllers
     public class ListingsController : ControllerBase
     {
         private readonly IListingsRepository _listingsRepository;
+        private readonly IListingsCachingService _listingsCachingService;
+        private readonly INeighbourhoodCachingService _neighbourhoodCachingService;
 
-        public ListingsController(IListingsRepository listingsRepository)
+        public ListingsController(IListingsRepository listingsRepository, IListingsCachingService listingsCachingService,INeighbourhoodCachingService neighbourhoodCachingService)
         {
             _listingsRepository = listingsRepository;
+            _listingsCachingService = listingsCachingService;
+            _neighbourhoodCachingService = neighbourhoodCachingService;
         }
 
         // GET: locations
         [HttpGet("locations")]
         public async Task<string> GetLocations()
         {
-            return await _listingsRepository.GetLocations();
+            var stopwatch = Stopwatch.StartNew();
+            if (_listingsCachingService.CachedAvailable())
+            {
+                var result = _listingsCachingService.GetCachedLocations();
+
+                stopwatch.Stop();
+                Debug.WriteLine("Listings time elapsed CACHE: " + stopwatch.Elapsed);
+
+                return result;
+            }
+            var locations = await _listingsRepository.GetLocations();
+            _listingsCachingService.SetCachedLocations(locations);
+
+            stopwatch.Stop();
+            Debug.WriteLine("Listings time elapsed DB: " + stopwatch.Elapsed);
+            return locations;
         }
 
         [HttpGet("details/{id}")]
@@ -36,11 +52,32 @@ namespace Backend.Controllers
             return await _listingsRepository.GetLocationDetails(id);
         }
 
-        // GET: Listings/5
-        [HttpGet("{id}")]
-        public async Task<Listings> GetListings(int id)
+        [HttpGet("Neighbourhoods")]
+        public async Task<IEnumerable<Neighbourhoods>> Getneighbourhoods()
         {
-            return await _listingsRepository.GetAsync(id);
+            var stopwatch = Stopwatch.StartNew();
+            if (_neighbourhoodCachingService.CachedAvailable())
+            {
+                var result = await _neighbourhoodCachingService.GetCachedNeighbourhoods();
+
+                stopwatch.Stop();
+                Debug.WriteLine("Neighbourhoods time elapsed CACHE: " + stopwatch.Elapsed);
+
+                return result;
+            }
+            var neighbourhoods =  await _listingsRepository.GetNeighbourhoods();
+            _neighbourhoodCachingService.SetCachedNeighbourhoods(neighbourhoods);
+
+            stopwatch.Stop();
+            Debug.WriteLine("Neighbourhoods time elapsed DB: " + stopwatch.Elapsed);
+
+            return neighbourhoods;
+        }
+
+        [HttpPost("filter")]
+        public async Task<string> Filter(FilterObj filter)
+        {
+            return await _listingsRepository.Filter(filter);
         }
     }
 }

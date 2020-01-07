@@ -71,7 +71,7 @@ namespace Backend.Models
         public string BedType { get; set; }
         public string Amenities { get; set; }
         public string SquareFeet { get; set; }
-        public double Price { get; set; }
+        public string Price { get; set; }
         public string WeeklyPrice { get; set; }
         public string MonthlyPrice { get; set; }
         public string SecurityDeposit { get; set; }

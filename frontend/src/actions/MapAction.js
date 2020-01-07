@@ -1,5 +1,4 @@
 export function getLocationDetailsAction(id) {
-	console.log(id);
 	return async (dispatch) => {
 		return await fetch(`http://localhost:5000/Listings/details/${id}`)
 			.then((details) => {
@@ -17,7 +16,7 @@ export function getLocationDetailsAction(id) {
 function LocationDetailsAction(content) {
 	return {
 		type: 'locationDetailsAction',
-		locationDetails: content
+		value: content
 	};
 }
 
@@ -37,9 +36,30 @@ export function getLocationsChangeAction() {
 }
 
 function handleSaveLocationsAction(content) {
-	console.log(content);
 	return {
 		type: 'saveLocationsAction',
+		value: content
+	};
+}
+
+export function getNeighbourhoodsChangeAction() {
+	return async (dispatch) => {
+		return await fetch(`https://localhost:5001/listings/Neighbourhoods`)
+			.then((Neighbourhoods) => {
+				return Neighbourhoods.json();
+			})
+			.then((content) => {
+				dispatch(handleSaveNeighbourhoodsAction(content));
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+}
+
+function handleSaveNeighbourhoodsAction(content) {
+	return {
+		type: 'handleSaveNeighbourhoodsAction',
 		value: content
 	};
 }
