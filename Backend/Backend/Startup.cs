@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Backend.Repositories;
 using Backend.Services;
 using StackExchange.Redis;
+using IdentityServer4.AccessTokenValidation;
 
 namespace Backend
 {
@@ -39,7 +40,16 @@ namespace Backend
 
             services.AddDbContext<AirBNBDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
+
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+            .AddIdentityServerAuthentication(options => {
+                options.Authority = "http://localhost:5000/";
+                options.RequireHttpsMetadata = false;
+
+                options.ApiName = "api1";
+                options.ApiSecret = "secret";
+            });
+
             services.AddControllersWithViews();
             services.AddTransient<IListingsRepository, ListingsRepository>();
             services.AddTransient<IUsersRepository, UsersRepository>();
@@ -62,6 +72,8 @@ namespace Backend
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

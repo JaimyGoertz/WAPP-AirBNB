@@ -2,8 +2,35 @@ import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import '../css/NavBar.scss';
+import { connect } from 'react-redux';
+import { logoutAction } from '../actions/LoginAction';
 
-export class NavBar extends Component {
+class NavBarUI extends Component {
+	chartsButton() {
+		if (this.props.role === 'admin') {
+			return (
+				<NavItem>
+					<Link className="text-nav" to="/charts">
+						Charts
+					</Link>
+				</NavItem>
+			);
+		}
+	}
+
+	logoutButton() {
+		const logoutHandler = () => this.props.logoutDispatcher();
+		if (this.props.token !== null) {
+			return (
+				<NavItem>
+					<Link className="text-nav" to="/">
+						<div onClick={logoutHandler}>Logout</div>
+					</Link>
+				</NavItem>
+			);
+		}
+	}
+
 	render() {
 		return (
 			<header>
@@ -27,11 +54,8 @@ export class NavBar extends Component {
 									Map
 								</Link>
 							</NavItem>
-							<NavItem>
-								<Link className="text-nav" to="/charts">
-									Charts
-								</Link>
-							</NavItem>
+							{this.chartsButton()}
+							{this.logoutButton()}
 						</ul>
 					</Container>
 				</Navbar>
@@ -39,3 +63,18 @@ export class NavBar extends Component {
 		);
 	}
 }
+
+function mapDispatchToProps(dispatch) {
+	return {
+		logoutDispatcher: () => dispatch(logoutAction())
+	};
+}
+
+function mapStateToProps(state) {
+	return {
+		token: state.loginReducer.token,
+		role: state.loginReducer.role
+	};
+}
+
+export const NavBar = connect(mapStateToProps, mapDispatchToProps)(NavBarUI);

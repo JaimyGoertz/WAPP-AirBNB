@@ -21,6 +21,7 @@ class RegisterUI extends Component {
 			<div>
 				<NavBar />
 				<div className="register-content">
+					<h1>Register</h1>
 					<form name="register" onSubmit={formHandler}>
 						<div className="register-text">
 							<h1 className="register-text">E-mail</h1>

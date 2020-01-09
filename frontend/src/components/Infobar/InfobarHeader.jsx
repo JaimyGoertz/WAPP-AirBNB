@@ -16,6 +16,13 @@ class InfoBarHeaderUI extends Component {
 		this.props.getNeighbourhoodsDispatcher();
 	}
 
+	getSelectedLocation = () => {
+		if (this.props.locations == undefined || this.props.locations == []) {
+			console.log('joe');
+			return <h1>No locations found</h1>;
+		}
+	};
+
 	render() {
 		const neighbourhoodsChangeHandler = (evt) => this.props.neighbourhoodsChangeDispatcher(evt.target.value);
 		const priceChangeHandler = (evt) => this.props.priceChangeDispatcher(evt.target.value);
@@ -76,6 +83,7 @@ class InfoBarHeaderUI extends Component {
 							Reset
 						</button>
 					</form>
+					{this.getSelectedLocation()}
 				</div>
 			);
 		} else {
@@ -101,7 +109,8 @@ function mapStateToProps(state) {
 		neighbourhoods: state.mapReducer.neighbourhoods,
 		price: state.filterReducer.price,
 		review: state.filterReducer.review,
-		neighbourhood: state.filterReducer.neighbourhood
+		neighbourhood: state.filterReducer.neighbourhood,
+		locations: state.filterReducer.locations.features
 	};
 }
 

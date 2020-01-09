@@ -31,6 +31,7 @@ namespace IdentityServer.Services
                 var claims = new List<Claim>
                 {
                 new Claim(JwtClaimTypes.Subject, user.UserId.ToString()),
+                new Claim(JwtClaimTypes.PreferredUserName, user.Username),
                 new Claim(JwtClaimTypes.Role, user.Role),
 
 				//add as many claims as you want!new Claim(JwtClaimTypes.Email, user.Email),new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean)

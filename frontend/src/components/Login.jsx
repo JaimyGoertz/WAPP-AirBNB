@@ -1,30 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { emailChangeAction, passwordChangeAction, clickLoginButtonAction } from '../actions/LoginAction';
+import { usernameChangeAction, passwordChangeAction, clickLoginButtonAction } from '../actions/LoginAction';
 import '../css/Login.scss';
 import { NavBar } from './NavBar';
+import { Link } from 'react-router-dom';
 
 class LoginUI extends Component {
 	render() {
-		const emailChangeHandler = (evt) => this.props.emailChangeDispatcher(evt.target.value);
+		const usernameChangeHandler = (evt) => this.props.usernameChangeDispatcher(evt.target.value);
 		const passwordChangeHandler = (evt) => this.props.passwordChangeDispatcher(evt.target.value);
 		const clickLoginButtonHandler = () =>
-			this.props.clickLoginButtonDispatcher(this.props.email, this.props.password);
+			this.props.clickLoginButtonDispatcher(this.props.username, this.props.password);
 		const formHandler = (evt) => evt.preventDefault();
 		return (
 			<div>
 				<NavBar />
 				<div className="login-content">
+					<h1>Login</h1>
 					<form name="login" onSubmit={formHandler}>
 						<div className="login-text">
-							<h1 className="login-text">E-mail</h1>
+							<h1 className="login-text">Username</h1>
 							<input
-								placeholder="E-mail"
+								placeholder="Username"
 								className="login-input"
 								type="text"
-								name="email"
-								value={this.props.email}
-								onChange={emailChangeHandler}
+								name="username"
+								value={this.props.username}
+								onChange={usernameChangeHandler}
 								required
 							/>
 							<h1 className="login-text">Password</h1>
@@ -38,9 +40,11 @@ class LoginUI extends Component {
 								required
 							/>
 							<div>
-								<button className="bttn__blue login-bttn" onClick={clickLoginButtonHandler}>
-									Login
-								</button>
+								<Link to="/">
+									<button className="bttn__blue login-bttn" onClick={clickLoginButtonHandler}>
+										Login
+									</button>
+								</Link>
 							</div>
 						</div>
 					</form>
@@ -52,15 +56,15 @@ class LoginUI extends Component {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		clickLoginButtonDispatcher: (email, password) => dispatch(clickLoginButtonAction(email, password)),
-		emailChangeDispatcher: (value) => dispatch(emailChangeAction(value)),
+		clickLoginButtonDispatcher: (username, password) => dispatch(clickLoginButtonAction(username, password)),
+		usernameChangeDispatcher: (value) => dispatch(usernameChangeAction(value)),
 		passwordChangeDispatcher: (value) => dispatch(passwordChangeAction(value))
 	};
 }
 
 function mapStateToProps(state) {
 	return {
-		email: state.loginReducer.email,
+		username: state.loginReducer.username,
 		password: state.loginReducer.password
 	};
 }

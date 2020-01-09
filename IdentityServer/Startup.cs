@@ -75,8 +75,14 @@ namespace Identityserver
             var migrationsAssemblyIdentity = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
 
-            var connectionString = "Server=localhost;Database=AirBNB; Trusted_Connection=True;";
+            var connectionString = "Server=localhost;Database=AirBNB3; Trusted_Connection=True;";
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder => {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
 
             services.AddDbContext<AirBNBContext>(options => {
                 options.UseSqlServer(connectionString);
@@ -117,6 +123,7 @@ namespace Identityserver
                 app.UseDeveloperExceptionPage();
             }
             //InitializeDatabase(app);
+            app.UseCors("MyPolicy");
 
             app.UseIdentityServer();
         }

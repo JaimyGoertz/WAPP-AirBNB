@@ -72,18 +72,6 @@ namespace Backend.Repositories
             {
                 loc = await Context.Listings.Where(x => x.ReviewScoresRating > filter.Review && Convert.ToDouble(x.Price) < filter.Price).Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
             }
-            else if (filter.Review == null && filter.Price == null)
-            {
-                loc = await Context.Listings.Where(x => x.Neighbourhood == filter.Neighbourhood).Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
-            }
-            else if (filter.Price == null)
-            {
-                loc = await Context.Listings.Where(x => x.Neighbourhood == filter.Neighbourhood && x.ReviewScoresRating > filter.Review).Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
-            }
-            else if (filter.Review == null)
-            {
-                loc = await Context.Listings.Where(x => x.Neighbourhood == filter.Neighbourhood && Convert.ToDouble(x.Price) < filter.Price).Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();
-            }
             else
             {
                 loc = await Context.Listings.Where(x => x.Neighbourhood == filter.Neighbourhood && x.ReviewScoresRating > filter.Review && Convert.ToDouble(x.Price) < filter.Price).Select(x => new Locations { Id = x.Id, Latitude = x.Latitude, Longitude = x.Longitude }).ToListAsync();

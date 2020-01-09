@@ -1,6 +1,10 @@
 const initialState = {
 	filter: false,
-	neighbourhood: 'All'
+	neighbourhood: 'All',
+	locations: {
+		type: 'FeatureCollection',
+		features: []
+	}
 };
 
 export function FilterReducer(state = initialState, action) {

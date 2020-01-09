@@ -44,6 +44,7 @@ class ChartsUI extends Component {
 					<Bar
 						data={{
 							labels: this.props.reviewChart.numbers,
+							scaleLabel: 'text',
 							datasets: [
 								{
 									data: this.props.reviewChart.count,
@@ -55,13 +56,31 @@ class ChartsUI extends Component {
 						width={1000}
 						height={500}
 						options={{
+							legend: {
+								display: false
+							},
+							tooltips: {
+								enabled: true
+							},
 							maintainAspectRatio: false,
 							responsive: false,
-							legend: {
-								position: 'left',
-								labels: {
-									boxWidth: 10
-								}
+							scales: {
+								yAxes: [
+									{
+										scaleLabel: {
+											display: true,
+											labelString: 'Amount of reviews'
+										}
+									}
+								],
+								xAxes: [
+									{
+										scaleLabel: {
+											display: true,
+											labelString: 'Score from 1 to 10'
+										}
+									}
+								]
 							}
 						}}
 					/>
@@ -80,14 +99,32 @@ class ChartsUI extends Component {
 						width={1000}
 						height={500}
 						options={{
+							legend: {
+								display: false
+							},
+							tooltips: {
+								enabled: true
+							},
 							elements: { point: { radius: 0 } },
 							maintainAspectRatio: false,
 							responsive: false,
-							legend: {
-								position: 'left',
-								labels: {
-									boxWidth: 10
-								}
+							scales: {
+								yAxes: [
+									{
+										scaleLabel: {
+											display: true,
+											labelString: 'Amount of AirBnBs'
+										}
+									}
+								],
+								xAxes: [
+									{
+										scaleLabel: {
+											display: true,
+											labelString: 'Days available(per year)'
+										}
+									}
+								]
 							}
 						}}
 					/>

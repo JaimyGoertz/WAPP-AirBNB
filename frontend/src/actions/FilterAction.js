@@ -19,18 +19,21 @@ export function neighbourhoodsChangeAction(neighbourhood) {
 	};
 }
 
-export function clickFilterButtonAction(neighbourhood, price, review) {
-	if (price != '') {
-		price = parseInt(price);
+export function clickFilterButtonAction(neighbourhood, priceParam, reviewParam) {
+	let price = 0;
+	let review = 0;
+	console.log(priceParam, reviewParam);
+	if (priceParam != undefined) {
+		price = parseInt(priceParam);
 	} else {
-		price = 0;
+		price = 100000;
 	}
-	if (review != '') {
-		review = parseInt(review);
+	if (reviewParam != undefined) {
+		review = parseInt(reviewParam);
 	} else {
 		review = 0;
 	}
-
+	console.log(price, review);
 	return async (dispatch) => {
 		const data = await fetch(`https://localhost:5001/listings/filter`, {
 			method: 'POST',
