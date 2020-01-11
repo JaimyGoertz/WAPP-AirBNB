@@ -1,10 +1,13 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Cookies from 'universal-cookie';
 
 class PrivateRouteUI extends React.Component {
 	render() {
-		if (this.props.role === 'admin') {
+		const cookies = new Cookies();
+		const role = cookies.get('role');
+		if (role === 'admin') {
 			return <Route exact={this.props.exact || false} to={this.props.path} component={this.props.component} />;
 		} else {
 			return <Redirect to="/login" />;

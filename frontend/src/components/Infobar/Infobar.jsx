@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NavBar } from '../NavBar';
-import { Link } from 'react-router-dom';
-import '../../css/Infobar.scss';
+import '../../styles/Infobar.scss';
 import { InfobarHeader } from './InfobarHeader';
 
 class InfoBarUI extends Component {

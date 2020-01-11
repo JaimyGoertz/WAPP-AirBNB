@@ -21,46 +21,54 @@ class RegisterUI extends Component {
 			<div>
 				<NavBar />
 				<div className="register-content">
-					<h1>Register</h1>
-					<form name="register" onSubmit={formHandler}>
-						<div className="register-text">
-							<h1 className="register-text">E-mail</h1>
-							<input
-								className="register-input"
-								type="email"
-								name="email"
-								placeholder="e-mail"
-								value={this.props.email}
-								onChange={emailChangeHandler}
-								required
-							/>
-							<h1 className="register-text">Password</h1>
-							<input
-								className="register-input"
-								type="password"
-								name="password"
-								placeholder="password"
-								value={this.props.password}
-								onChange={passwordChangeHandler}
-								required
-							/>
-							<h1 className="register-text">Repeat Password</h1>
-							<input
-								className="register-input"
-								type="password"
-								name="passwordRepeat"
-								placeholder="password"
-								value={this.props.passwordRepeat}
-								onChange={passwordRepeatChangeHandler}
-								required
-							/>
-							<div>
-								<button className="bttn__blue register-bttn" onClick={clickRegisterButtonHandler}>
-									Register
-								</button>
+					<div className="direction">
+						<h1 className="title">Register</h1>
+						<form name="register" onSubmit={formHandler}>
+							<div className="register-text">
+								<div className="item">
+									<h1 className="register-text">E-mail</h1>
+									<input
+										className="register-input"
+										type="email"
+										name="email"
+										placeholder="e-mail"
+										value={this.props.email}
+										onChange={emailChangeHandler}
+										required
+									/>
+								</div>
+								<div className="item">
+									<h1 className="register-text">Password</h1>
+									<input
+										className="register-input"
+										type="password"
+										name="password"
+										placeholder="password"
+										value={this.props.password}
+										onChange={passwordChangeHandler}
+										required
+									/>
+								</div>
+								<div className="item">
+									<h1 className="register-text">Repeat Password</h1>
+									<input
+										className="register-input"
+										type="password"
+										name="passwordRepeat"
+										placeholder="password"
+										value={this.props.passwordRepeat}
+										onChange={passwordRepeatChangeHandler}
+										required
+									/>
+								</div>
+								<div>
+									<button className="button-register" onClick={clickRegisterButtonHandler}>
+										Register
+									</button>
+								</div>
 							</div>
-						</div>
-					</form>
+						</form>
+					</div>
 				</div>
 			</div>
 		);

@@ -1,17 +1,24 @@
 import React, { Component } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import { Container, Navbar, NavbarToggler, NavItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import '../styles/NavBar.scss';
 import { connect } from 'react-redux';
 import { logoutAction } from '../actions/LoginAction';
+import { chartsAction } from '../actions/LoginAction';
+import Cookies from 'universal-cookie';
 
 class NavBarUI extends Component {
 	chartsButton() {
-		if (this.props.role === 'admin') {
+		const cookies = new Cookies();
+		const role = cookies.get('role');
+		const chartsHandler = () => this.props.chartsDispatcher();
+		if (role === 'admin') {
 			return (
 				<NavItem>
 					<Link className="text-nav" to="/charts">
-						<div className="text">Charts</div>
+						<div className="text" onClick={chartsHandler}>
+							Charts
+						</div>
 					</Link>
 				</NavItem>
 			);
@@ -19,8 +26,10 @@ class NavBarUI extends Component {
 	}
 
 	logoutButton() {
+		const cookies = new Cookies();
+		const token = cookies.get('token');
 		const logoutHandler = () => this.props.logoutDispatcher();
-		if (this.props.token !== null) {
+		if (token !== undefined) {
 			return (
 				<NavItem>
 					<Link className="text-nav" to="/">
@@ -76,7 +85,8 @@ class NavBarUI extends Component {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		logoutDispatcher: () => dispatch(logoutAction())
+		logoutDispatcher: () => dispatch(logoutAction()),
+		chartsDispatcher: () => dispatch(chartsAction())
 	};
 }
 

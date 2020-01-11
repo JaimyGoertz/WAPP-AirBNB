@@ -85,3 +85,9 @@ export function getUserInfoDispatcher(token) {
 		}
 	};
 }
+
+export function chartsAction() {
+	return {
+		type: 'chartsAction'
+	};
+}

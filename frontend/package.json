@@ -19,7 +19,8 @@
     "reactstrap": "^8.2.0",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "sass": "^1.23.7"
+    "sass": "^1.23.7",
+    "universal-cookie": "^4.0.3"
   },
   "scripts": {
     "start": "react-scripts start",

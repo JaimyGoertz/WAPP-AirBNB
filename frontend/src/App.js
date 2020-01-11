@@ -7,7 +7,7 @@ import { Map } from './components/Map';
 import { Charts } from './components/Charts';
 import { PrivateRoute } from './utils/PrivateRoute';
 import { PublicRoute } from './utils/PublicRoute';
-import './css/style.scss';
+import './styles/style.scss';
 
 export default class App extends Component {
 	static displayName = App.name;
