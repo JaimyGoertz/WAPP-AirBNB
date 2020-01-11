@@ -25,7 +25,7 @@ namespace Backend.Repositories
         {
            string hashedPassword =  hash(user.Password);
             user.Password = hashedPassword;
-            user.UserId = 0;
+            Users newUser = new Users() { Password = hashedPassword, Role = user.Role, Username = user.Username };
             _context.Users.Add(user);
             try
             {
@@ -44,19 +44,24 @@ namespace Backend.Repositories
         }
 
         private string hash(string password)
-        { 
-        byte[] salt = new byte[128 / 8];
-        using (var rng = RandomNumberGenerator.Create())
         {
-            rng.GetBytes(salt);
+            var salt = GenerateSalt(16);
+
+            var bytes = KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA512, 10000, 16);
+
+            return $"{ Convert.ToBase64String(salt) }:{ Convert.ToBase64String(bytes) }";
         }
-        string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-            password: password,
-            salt: salt,
-            prf: KeyDerivationPrf.HMACSHA1,
-            iterationCount: 10000,
-            numBytesRequested: 256 / 8));
-            return hashed;
+
+        private static byte[] GenerateSalt(int length)
+        {
+            var salt = new byte[length];
+
+            using (var random = RandomNumberGenerator.Create())
+            {
+                random.GetBytes(salt);
+            }
+
+            return salt;
         }
 
     }

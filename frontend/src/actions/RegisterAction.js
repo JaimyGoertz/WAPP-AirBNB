@@ -1,7 +1,37 @@
 export function passwordChangeAction(password) {
+	const regex = /(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}/gm;
+	return async (dispatch) => {
+		if (!password.match(regex)) {
+			console.log('not');
+			dispatch(
+				passwordErrorAction(
+					'Password must contain: Minimum eight characters, at least one letter, one number and one special character'
+				)
+			);
+			dispatch(passwordDispatch(password));
+		} else {
+			dispatch(passwordDispatch(password));
+			dispatch(clearPasswordError());
+		}
+	};
+}
+function passwordDispatch(password) {
 	return {
 		type: 'passwordChangeAction',
 		value: password
+	};
+}
+
+function clearPasswordError() {
+	return {
+		type: 'clearPasswordError'
+	};
+}
+
+export function passwordErrorAction(error) {
+	return {
+		type: 'passwordErrorAction',
+		value: error
 	};
 }
 
@@ -12,26 +42,45 @@ export function passwordRepeatChangeAction(passwordRepeat) {
 	};
 }
 
-export function emailChangeAction(email) {
+export function usernameChangeAction(username) {
 	return {
-		type: 'emailChangeAction',
-		value: email
+		type: 'usernameChangeAction',
+		value: username
 	};
 }
 
-export function clickRegisterButtonAction(email, password, passwordRepeat) {
+export function clickRegisterButtonAction(username, password, passwordRepeat, passwordError) {
 	var role = 'user';
+
 	return async (dispatch) => {
-		const data = await fetch(`https://localhost:5001/Users`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email, password, role })
-		});
-		const content = await data.json();
-		if (content.error) {
-			throw new Error('Data incorrect');
+		if (username === '') {
+			dispatch(setRegisterErrorAction('Username is empty!'));
+		}
+		if (passwordError === '') {
+			try {
+				if (password != passwordRepeat) {
+					dispatch(setRegisterErrorAction('Passwords do not match!'));
+				}
+				const data = await fetch(`https://localhost:5001/Users`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ username, password, role })
+				});
+				const content = await data.json();
+				if (content.error) {
+					dispatch(setRegisterErrorAction('Data is incorrect!'));
+				} else {
+					dispatch(handleRegisterAction(content));
+				}
+			} catch (err) {
+				dispatch(setRegisterErrorAction('An error has occurred!'));
+			}
 		} else {
-			dispatch(handleRegisterAction(content));
+			dispatch(
+				passwordErrorAction(
+					'Password must contain: Minimum eight characters, at least one letter, one number and one special character'
+				)
+			);
 		}
 	};
 }
@@ -39,6 +88,19 @@ export function clickRegisterButtonAction(email, password, passwordRepeat) {
 function handleRegisterAction(content) {
 	return {
 		type: 'handleRegisterAction',
-		email: content.email || ''
+		username: content.username || ''
+	};
+}
+
+export function setRegisterErrorAction(error) {
+	return {
+		type: 'setRegisterError',
+		error: error
+	};
+}
+
+export function handleRedirectAction() {
+	return {
+		type: 'handleRedirectAction'
 	};
 }

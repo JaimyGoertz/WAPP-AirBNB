@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { usernameChangeAction, passwordChangeAction, clickLoginButtonAction } from '../actions/LoginAction';
+import {
+	usernameChangeAction,
+	passwordChangeAction,
+	clickLoginButtonAction,
+	handleRedirectAction
+} from '../actions/LoginAction';
 import '../styles/Login.scss';
 import { NavBar } from './NavBar';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 class LoginUI extends Component {
 	render() {
@@ -18,6 +23,7 @@ class LoginUI extends Component {
 				<div className="login-content">
 					<div className="direction">
 						<h1 className="title">Login</h1>
+						{this.RedirectOnLogin()}
 						<form name="login" onSubmit={formHandler}>
 							<div className="login-text">
 								<div className="item">
@@ -44,17 +50,24 @@ class LoginUI extends Component {
 										required
 									/>
 								</div>
-								<Link to="/">
-									<button className="button-login" onClick={clickLoginButtonHandler}>
-										Login
-									</button>
-								</Link>
+								<button className="button-login" onClick={clickLoginButtonHandler}>
+									Login
+								</button>
 							</div>
 						</form>
 					</div>
+					<h3 className="error">{this.props.error}</h3>
 				</div>
 			</div>
 		);
+	}
+
+	RedirectOnLogin() {
+		if (this.props.redirect) {
+			this.props.handleRedirect();
+			return <Redirect to="/" />;
+		}
+		return null;
 	}
 }
 
@@ -62,14 +75,17 @@ function mapDispatchToProps(dispatch) {
 	return {
 		clickLoginButtonDispatcher: (username, password) => dispatch(clickLoginButtonAction(username, password)),
 		usernameChangeDispatcher: (value) => dispatch(usernameChangeAction(value)),
-		passwordChangeDispatcher: (value) => dispatch(passwordChangeAction(value))
+		passwordChangeDispatcher: (value) => dispatch(passwordChangeAction(value)),
+		handleRedirect: () => dispatch(handleRedirectAction())
 	};
 }
 
 function mapStateToProps(state) {
 	return {
 		username: state.loginReducer.username,
-		password: state.loginReducer.password
+		password: state.loginReducer.password,
+		error: state.loginReducer.error,
+		redirect: state.loginReducer.redirect
 	};
 }
 

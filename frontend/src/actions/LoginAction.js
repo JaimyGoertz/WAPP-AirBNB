@@ -91,3 +91,9 @@ export function chartsAction() {
 		type: 'chartsAction'
 	};
 }
+
+export function handleRedirectAction() {
+	return {
+		type: 'handleRedirectAction'
+	};
+}

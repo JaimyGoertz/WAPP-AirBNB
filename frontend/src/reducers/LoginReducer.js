@@ -5,7 +5,8 @@ const initialState = {
 	password: '',
 	token: null,
 	role: '',
-	username: ''
+	username: '',
+	redirect: false
 };
 
 export function LoginReducer(state = initialState, action) {
@@ -22,9 +23,9 @@ export function LoginReducer(state = initialState, action) {
 		case 'setUserInfo':
 			cookies.set('username', action.username, { path: '/', expires: expiration });
 			cookies.set('role', action.role, { path: '/', expires: expiration });
-			return { ...state, username: action.username, role: action.role };
+			return { ...state, username: action.username, role: action.role, redirect: true };
 		case 'setLoginError':
-			return { ...state, error: action.error };
+			return { ...state, error: action.error, redirect: false };
 		case 'logoutAction':
 			cookies.remove('role');
 			cookies.remove('token');
@@ -39,6 +40,9 @@ export function LoginReducer(state = initialState, action) {
 			};
 		case 'chartsAction':
 			return { ...state, charts: true };
+		case 'handleRedirectAction':
+			return { ...state, redirect: false, error: '' };
+
 		default:
 			return state;
 	}

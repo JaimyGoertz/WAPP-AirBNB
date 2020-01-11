@@ -3,19 +3,26 @@ import { connect } from 'react-redux';
 import {
 	passwordChangeAction,
 	passwordRepeatChangeAction,
-	emailChangeAction,
-	clickRegisterButtonAction
+	usernameChangeAction,
+	clickRegisterButtonAction,
+	handleRedirectAction
 } from '../actions/RegisterAction';
 import '../styles/Register.scss';
 import { NavBar } from './NavBar';
+import { Redirect } from 'react-router-dom';
 
 class RegisterUI extends Component {
 	render() {
 		const passwordChangeHandler = (evt) => this.props.passwordChangeDispatcher(evt.target.value);
 		const passwordRepeatChangeHandler = (evt) => this.props.passwordRepeatChangeDispatcher(evt.target.value);
-		const emailChangeHandler = (evt) => this.props.emailChangeDispatcher(evt.target.value);
+		const usernameChangeHandler = (evt) => this.props.usernameChangeDispatcher(evt.target.value);
 		const clickRegisterButtonHandler = () =>
-			this.props.clickRegisterButtonDispatcher(this.props.email, this.props.password, this.props.passwordRepeat);
+			this.props.clickRegisterButtonDispatcher(
+				this.props.username,
+				this.props.password,
+				this.props.passwordRepeat,
+				this.props.passwordError
+			);
 		const formHandler = (evt) => evt.preventDefault();
 		return (
 			<div>
@@ -23,17 +30,18 @@ class RegisterUI extends Component {
 				<div className="register-content">
 					<div className="direction">
 						<h1 className="title">Register</h1>
+						{this.handleRedirect()}
 						<form name="register" onSubmit={formHandler}>
 							<div className="register-text">
 								<div className="item">
-									<h1 className="register-text">E-mail</h1>
+									<h1 className="register-text">Username</h1>
 									<input
 										className="register-input"
-										type="email"
-										name="email"
-										placeholder="e-mail"
-										value={this.props.email}
-										onChange={emailChangeHandler}
+										type="username"
+										name="username"
+										placeholder="username"
+										value={this.props.username}
+										onChange={usernameChangeHandler}
 										required
 									/>
 								</div>
@@ -48,6 +56,7 @@ class RegisterUI extends Component {
 										onChange={passwordChangeHandler}
 										required
 									/>
+									<p className="redError">{this.props.passwordError}</p>
 								</div>
 								<div className="item">
 									<h1 className="register-text">Repeat Password</h1>
@@ -69,19 +78,28 @@ class RegisterUI extends Component {
 							</div>
 						</form>
 					</div>
+					<h3 className="error">{this.props.error}</h3>
 				</div>
 			</div>
 		);
+	}
+	handleRedirect() {
+		if (this.props.redirect) {
+			this.props.handleRedirect();
+			return <Redirect to="/login" />;
+		}
+		return null;
 	}
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		clickRegisterButtonDispatcher: (email, password, passwordRepeat) =>
-			dispatch(clickRegisterButtonAction(email, password, passwordRepeat)),
+		clickRegisterButtonDispatcher: (username, password, passwordRepeat, passwordError) =>
+			dispatch(clickRegisterButtonAction(username, password, passwordRepeat, passwordError)),
 		passwordChangeDispatcher: (value) => dispatch(passwordChangeAction(value)),
 		passwordRepeatChangeDispatcher: (value) => dispatch(passwordRepeatChangeAction(value)),
-		emailChangeDispatcher: (value) => dispatch(emailChangeAction(value))
+		usernameChangeDispatcher: (value) => dispatch(usernameChangeAction(value)),
+		handleRedirect: () => dispatch(handleRedirectAction())
 	};
 }
 
@@ -89,7 +107,10 @@ function mapStateToProps(state) {
 	return {
 		password: state.registerReducer.password,
 		passwordRepeat: state.registerReducer.passwordRepeat,
-		email: state.registerReducer.email
+		username: state.registerReducer.username,
+		error: state.registerReducer.error,
+		passwordError: state.registerReducer.passwordError,
+		redirect: state.registerReducer.redirect
 	};
 }
 

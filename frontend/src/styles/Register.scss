@@ -35,3 +35,13 @@
 	color: $color-white;
 	background-color: $color-blue;
 }
+
+.error {
+	position: absolute;
+	top: 600px;
+	color: red;
+}
+
+.redError {
+	color: red;
+}

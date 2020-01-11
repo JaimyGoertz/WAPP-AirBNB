@@ -408,8 +408,9 @@ namespace Backend.Models
                 entity.ToTable("users");
 
                 entity.Property(e => e.UserId)
-                    .HasColumnName("userId")
-                    .ValueGeneratedOnAdd();
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("userId");
+                               
 
                 entity.Property(e => e.Password)
                     .HasColumnName("password")
@@ -421,8 +422,8 @@ namespace Backend.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Email)
-                    .HasColumnName("email")
+                entity.Property(e => e.Username)
+                    .HasColumnName("username")
                     .HasMaxLength(255)
                     .IsUnicode(false);
             });
