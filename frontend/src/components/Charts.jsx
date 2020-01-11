@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { NavBar } from './NavBar';
 import { Link } from 'react-router-dom';
 import { getChartReviewAction, getChartAvailabilityAction } from '../actions/ChartsAction';
-import '../css/Home.scss';
+import '../styles/Home.scss';
 import { Bar, Line } from 'react-chartjs-2';
+import '../styles/Charts.scss';
 
 class ChartsUI extends Component {
 	constructor(props) {
@@ -37,97 +38,119 @@ class ChartsUI extends Component {
 
 	render() {
 		if (this.props.reviewChart !== undefined && this.props.availabilityChart !== undefined) {
+			var arrayReviewLabels = this.props.reviewChart.map(function(e) {
+				return parseInt(e.numbers);
+			});
+			var arrayReviewData = this.props.reviewChart.map(function(e) {
+				return e.count;
+			});
+			var arrayAvailableLabels = this.props.availabilityChart.map(function(e) {
+				return parseInt(e.numbers);
+			});
+			var arrayAvailableData = this.props.availabilityChart.map(function(e) {
+				return e.count;
+			});
+			var dataArray = arrayAvailableData.concat();
+			dataArray.shift();
 			return (
 				<div>
 					<NavBar />
-					<h3>Average review score (rounded)</h3>
-					<Bar
-						data={{
-							labels: this.props.reviewChart.numbers,
-							scaleLabel: 'text',
-							datasets: [
-								{
-									data: this.props.reviewChart.count,
-									backgroundColor: this.dynamicColors(20),
-									hoverBackgroundColor: [ '#FF6384', '#36A2EB', '#FFCE56' ]
-								}
-							]
-						}}
-						width={1000}
-						height={500}
-						options={{
-							legend: {
-								display: false
-							},
-							tooltips: {
-								enabled: true
-							},
-							maintainAspectRatio: false,
-							responsive: false,
-							scales: {
-								yAxes: [
-									{
-										scaleLabel: {
-											display: true,
-											labelString: 'Amount of reviews'
+					<div className="pageContainer">
+						<div className="chart">
+							<h3 className="headText">Average review score (rounded)</h3>
+							<Bar
+								data={{
+									labels: arrayReviewLabels,
+									scaleLabel: 'text',
+									datasets: [
+										{
+											data: arrayReviewData,
+											backgroundColor: this.dynamicColors(20),
+											hoverBackgroundColor: [ '#FF6384', '#36A2EB', '#FFCE56' ]
 										}
+									]
+								}}
+								width={800}
+								height={500}
+								options={{
+									legend: {
+										display: false
+									},
+									tooltips: {
+										enabled: true
+									},
+									maintainAspectRatio: false,
+									responsive: false,
+									scales: {
+										yAxes: [
+											{
+												scaleLabel: {
+													display: true,
+													labelString: 'Amount of reviews'
+												}
+											}
+										],
+										xAxes: [
+											{
+												scaleLabel: {
+													display: true,
+													labelString: 'Score from 1 to 10'
+												}
+											}
+										]
 									}
-								],
-								xAxes: [
-									{
-										scaleLabel: {
-											display: true,
-											labelString: 'Score from 1 to 10'
+								}}
+							/>
+						</div>
+						<div className="chart">
+							<h3 className="headText">Availability in days</h3>
+							<Line
+								data={{
+									labels: arrayAvailableLabels,
+									datasets: [
+										{
+											data: dataArray,
+											backgroundColor: this.dynamicColors(1)
 										}
+									]
+								}}
+								width={800}
+								height={500}
+								options={{
+									legend: {
+										display: false
+									},
+									tooltips: {
+										enabled: true
+									},
+									elements: { point: { radius: 0 } },
+									maintainAspectRatio: false,
+									responsive: false,
+									scales: {
+										yAxes: [
+											{
+												scaleLabel: {
+													display: true,
+													labelString: 'Amount of AirBnBs'
+												}
+											}
+										],
+										xAxes: [
+											{
+												scaleLabel: {
+													display: true,
+													labelString: 'Days available(per year)'
+												}
+											}
+										]
 									}
-								]
-							}
-						}}
-					/>
-
-					<h3>Availability in days</h3>
-					<Line
-						data={{
-							labels: this.props.availabilityChart.numbers,
-							datasets: [
-								{
-									data: this.props.availabilityChart.count,
-									backgroundColor: this.dynamicColors(1)
-								}
-							]
-						}}
-						width={1000}
-						height={500}
-						options={{
-							legend: {
-								display: false
-							},
-							tooltips: {
-								enabled: true
-							},
-							elements: { point: { radius: 0 } },
-							maintainAspectRatio: false,
-							responsive: false,
-							scales: {
-								yAxes: [
-									{
-										scaleLabel: {
-											display: true,
-											labelString: 'Amount of AirBnBs'
-										}
-									}
-								],
-								xAxes: [
-									{
-										scaleLabel: {
-											display: true,
-											labelString: 'Days available(per year)'
-										}
-									}
-								]
-							}
-						}}
-					/>
+								}}
+							/>
+							<p className="headText">
+								Number of airbnb's with zero days available: {arrayAvailableData[0]}
+							</p>
+						</div>
+					</div>
 				</div>
 			);
 		} else {

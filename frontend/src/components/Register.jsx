@@ -6,7 +6,7 @@ import {
 	emailChangeAction,
 	clickRegisterButtonAction
 } from '../actions/RegisterAction';
-import '../css/Register.scss';
+import '../styles/Register.scss';
 import { NavBar } from './NavBar';
 
 class RegisterUI extends Component {

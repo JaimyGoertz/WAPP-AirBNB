@@ -17,9 +17,10 @@ class InfoBarHeaderUI extends Component {
 	}
 
 	getSelectedLocation = () => {
-		if (this.props.locations == undefined || this.props.locations == []) {
+		console.log(this.props.locations);
+		if (this.props.locations.length === 0 && this.props.filter === true) {
 			console.log('joe');
-			return <h1>No locations found</h1>;
+			return <h1 className="NoLocations">No locations found</h1>;
 		}
 	};
 
@@ -110,7 +111,8 @@ function mapStateToProps(state) {
 		price: state.filterReducer.price,
 		review: state.filterReducer.review,
 		neighbourhood: state.filterReducer.neighbourhood,
-		locations: state.filterReducer.locations.features
+		locations: state.filterReducer.locations.features,
+		filter: state.filterReducer.filter
 	};
 }
 

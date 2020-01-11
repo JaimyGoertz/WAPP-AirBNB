@@ -19,7 +19,7 @@ export default class App extends Component {
 					<Route exact path="/" component={Home} />
 					<PublicRoute exact path="/login" component={Login} />
 					<PublicRoute exact path="/register" component={Register} />
-					<PublicRoute exact path="/map" component={Map} />
+					<Route exact path="/map" component={Map} />
 					<PrivateRoute exact path="/charts" component={Charts} />
 				</Switch>
 			</Router>

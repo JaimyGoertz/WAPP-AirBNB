@@ -3,6 +3,7 @@ using Backend.Models.Charts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,39 +21,19 @@ namespace Backend.Repositories
         {
         }
 
-        public async Task<ReviewChart> GetChart()
+        public async Task<IEnumerable<ReviewChart>> GetChart()
         {
-            int value = 0;
-            List<ReviewList> reviews = new List<ReviewList> { };
-            reviews = await Context.Listings.GroupBy(p => p.ReviewScoresRating / 10).Select(x => new ReviewList { ReviewScoresRating = x.Key, counter = x.Count() }).ToListAsync();
-
-            int[] numbers = new int[50];
-            int[] count = new int[50];
-            for (int intCounter = 0; intCounter < reviews.Count; intCounter++)
-                {
-                value = reviews[intCounter].ReviewScoresRating.GetValueOrDefault();
-
-
-                    if (numbers.Contains(value) == false)
-                    {
-                        //Get position of already exist number
-                        numbers[intCounter] = value;
-                        count[intCounter] = reviews[intCounter].counter;
-                    }
-                    else
-                    {
-                    int index = Array.IndexOf(numbers, value);
-                    int indexedNumber = count[index];
-                    int newValue = indexedNumber + count[intCounter];
-                    count[index] = newValue;
-                    }
-                }
-                
-               
-            IEnumerable<int> numbersDone = RemoveZeros(numbers, 20);
-            IEnumerable<int> countDone = RemoveZeros(count, 20);
-            ReviewChart charts = new ReviewChart { Numbers = numbersDone, Count = countDone};
-            return charts;
+            List<ReviewChart> charts = await Task.Run(() => Context.Listings
+          .GroupBy(x => x.ReviewScoresRating / 10)
+          .Select(l => new ReviewChart
+          {
+              Numbers = l.Key,
+              Count = l.Count()
+          })
+          .ToList()
+      );
+            var ratings = charts.Where(x => x.Numbers != null).ToArray();
+            return ratings;
         }
 
         public IEnumerable<int>RemoveZeros(int[] source, int take)
@@ -63,29 +44,20 @@ namespace Backend.Repositories
             return bar;
         }
 
-        public async Task<ReviewChart> GetChartAvailability()
+        public async Task<IEnumerable<ReviewChart>> GetChartAvailability()
         {
-            int value = 0;
-            List<ReviewList> reviews = new List<ReviewList> { };
-            reviews = await Context.Listings.GroupBy(p => p.Availability365).Select(x => new ReviewList { ReviewScoresRating = x.Key, counter = x.Count() }).OrderBy(c => c.ReviewScoresRating).ToListAsync();
-            int[] numbers = new int[366];
-            int[] count = new int[366];
-            for (int intCounter = 0; intCounter < 366; intCounter++)
-            {
-                value = reviews[intCounter].ReviewScoresRating.GetValueOrDefault();
-                //Get position of already exist number
-                if (value != 0)
-                {
-                    numbers[intCounter] = value;
-                    count[intCounter] = reviews[intCounter].counter;
-                }
-            }
+            List<ReviewChart> chart = await Task.Run(() => Context.Listings
+            .GroupBy(x => x.Availability365)
+            .Select(l => new ReviewChart
+             {
+             Numbers = l.Key,
+            Count = l.Count()
+             })
+            .OrderBy(c => c.Numbers)
+               .ToList()
+ );
 
-            Array.Sort(numbers);
-            IEnumerable<int> numbersDone = RemoveZeros(numbers,366);
-            IEnumerable<int> countDone = RemoveZeros(count,366);
-            ReviewChart charts = new ReviewChart { Numbers = numbersDone, Count = countDone };
-            return charts;
+            return chart;
         }
 
     }

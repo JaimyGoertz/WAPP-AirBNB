@@ -18,7 +18,8 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
 	return {
-		token: state.loginReducer.token
+		token: state.loginReducer.token,
+		role: state.loginReducer.role
 	};
 }
 

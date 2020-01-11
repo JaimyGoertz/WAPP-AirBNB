@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { NavBar } from './NavBar';
 import { getLocationsChangeAction, getLocationDetailsAction } from '../actions/MapAction';
 import { InfoBar } from './Infobar/Infobar';
-import '../css/Map.scss';
+import '../styles/Map.scss';
 
 class MapUI extends Component {
 	constructor(props) {

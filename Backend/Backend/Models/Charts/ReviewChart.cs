@@ -7,7 +7,7 @@ namespace Backend.Models.Charts
 {
     public class ReviewChart
     {
-        public IEnumerable<int> Numbers { get; set; }
-        public IEnumerable<int> Count { get; set; }
+        public int? Numbers { get; set; }
+        public int? Count { get; set; }
     }
 }

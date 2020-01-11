@@ -22,7 +22,6 @@ export function neighbourhoodsChangeAction(neighbourhood) {
 export function clickFilterButtonAction(neighbourhood, priceParam, reviewParam) {
 	let price = 0;
 	let review = 0;
-	console.log(priceParam, reviewParam);
 	if (priceParam != undefined) {
 		price = parseInt(priceParam);
 	} else {
@@ -33,7 +32,6 @@ export function clickFilterButtonAction(neighbourhood, priceParam, reviewParam) 
 	} else {
 		review = 0;
 	}
-	console.log(price, review);
 	return async (dispatch) => {
 		const data = await fetch(`https://localhost:5001/listings/filter`, {
 			method: 'POST',

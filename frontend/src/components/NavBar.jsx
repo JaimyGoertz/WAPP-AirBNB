@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import '../css/NavBar.scss';
+import '../styles/NavBar.scss';
 import { connect } from 'react-redux';
 import { logoutAction } from '../actions/LoginAction';
 
@@ -11,7 +11,7 @@ class NavBarUI extends Component {
 			return (
 				<NavItem>
 					<Link className="text-nav" to="/charts">
-						Charts
+						<div className="text">Charts</div>
 					</Link>
 				</NavItem>
 			);
@@ -24,7 +24,17 @@ class NavBarUI extends Component {
 			return (
 				<NavItem>
 					<Link className="text-nav" to="/">
-						<div onClick={logoutHandler}>Logout</div>
+						<div className="text" onClick={logoutHandler}>
+							Logout
+						</div>
+					</Link>
+				</NavItem>
+			);
+		} else {
+			return (
+				<NavItem>
+					<Link className="text-nav" to="/login">
+						<div className="text">Login</div>
 					</Link>
 				</NavItem>
 			);
@@ -46,12 +56,12 @@ class NavBarUI extends Component {
 						<ul className="navbar-nav flex-grow">
 							<NavItem>
 								<Link className="text-nav" to="/">
-									Home
+									<div className="text">Home</div>
 								</Link>
 							</NavItem>
 							<NavItem>
 								<Link className="text-nav" to="/map">
-									Map
+									<div className="text">Map</div>
 								</Link>
 							</NavItem>
 							{this.chartsButton()}

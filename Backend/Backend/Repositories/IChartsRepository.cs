@@ -9,8 +9,8 @@ namespace Backend.Repositories
 {
     public interface IChartsRepository : IRepository<Listings>
     {
-        Task<ReviewChart> GetChart();
-        Task<ReviewChart> GetChartAvailability();
+        Task<IEnumerable<ReviewChart>> GetChart();
+        Task<IEnumerable<ReviewChart>> GetChartAvailability();
 
     }
 }

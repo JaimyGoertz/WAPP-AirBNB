@@ -23,14 +23,14 @@ namespace Backend.Controllers
         }
 
         [HttpGet("review")]
-        public async Task<ReviewChart> GetChartReview()
+        public async Task<IEnumerable<ReviewChart>> GetChart()
         {
             return await _chartsRepository.GetChart();
         }
 
        [HttpGet("availability")]
-        public async Task<ReviewChart> GetChartAvailability()
-       {
+        public async Task<IEnumerable<ReviewChart>> GetChartAvailability()
+        {
             return await _chartsRepository.GetChartAvailability();
         }
 
