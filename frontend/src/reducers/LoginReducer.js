@@ -11,7 +11,7 @@ const initialState = {
 
 export function LoginReducer(state = initialState, action) {
 	const cookies = new Cookies();
-	var expiration = new Date(Date.now() + 0.2 * 60000);
+	var expiration = new Date(Date.now() + 10 * 60000);
 	switch (action.type) {
 		case 'usernameChangeAction':
 			return { ...state, username: action.value };

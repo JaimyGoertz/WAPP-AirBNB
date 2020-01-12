@@ -29,7 +29,7 @@ class MapUI extends Component {
 	};
 
 	render() {
-		if (this.props.locations != undefined) {
+		if (this.props.locations !== undefined) {
 			return (
 				<div>
 					<NavBar />
@@ -71,7 +71,7 @@ class MapUI extends Component {
 	}
 
 	sourceAndLayers() {
-		if (this.props.filter == true) {
+		if (this.props.filter === true) {
 			return (
 				<Source
 					id="source_id"

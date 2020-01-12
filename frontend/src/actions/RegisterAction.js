@@ -58,7 +58,7 @@ export function clickRegisterButtonAction(username, password, passwordRepeat, pa
 		}
 		if (passwordError === '') {
 			try {
-				if (password != passwordRepeat) {
+				if (password !== passwordRepeat) {
 					dispatch(setRegisterErrorAction('Passwords do not match!'));
 				}
 				const data = await fetch(`https://localhost:5001/Users`, {
@@ -73,7 +73,7 @@ export function clickRegisterButtonAction(username, password, passwordRepeat, pa
 					dispatch(handleRegisterAction(content));
 				}
 			} catch (err) {
-				dispatch(setRegisterErrorAction('An error has occurred!'));
+				dispatch(setRegisterErrorAction('Username is already in use!'));
 			}
 		} else {
 			dispatch(

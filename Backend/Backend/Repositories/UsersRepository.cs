@@ -25,7 +25,6 @@ namespace Backend.Repositories
         {
            string hashedPassword =  hash(user.Password);
             user.Password = hashedPassword;
-            Users newUser = new Users() { Password = hashedPassword, Role = user.Role, Username = user.Username };
             _context.Users.Add(user);
             try
             {
@@ -38,9 +37,9 @@ namespace Backend.Repositories
 
             return user;
         }
-        private bool UsersExists(int id)
+        private bool UsersExists(string username)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            return _context.Users.Any(e => e.Username == username);
         }
 
         private string hash(string password)

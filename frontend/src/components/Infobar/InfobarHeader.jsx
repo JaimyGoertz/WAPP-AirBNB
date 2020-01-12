@@ -17,9 +17,7 @@ class InfoBarHeaderUI extends Component {
 	}
 
 	getSelectedLocation = () => {
-		console.log(this.props.locations);
 		if (this.props.locations.length === 0 && this.props.filter === true) {
-			console.log('joe');
 			return <h1 className="NoLocations">No locations found</h1>;
 		}
 	};
@@ -33,7 +31,7 @@ class InfoBarHeaderUI extends Component {
 		const clickResetButtonHandler = () => this.props.clickResetButtonDispatcher();
 		const formHandler = (evt) => evt.preventDefault();
 
-		if (this.props.neighbourhoods != undefined) {
+		if (this.props.neighbourhoods !== undefined) {
 			return (
 				<div className="header">
 					<form name="filters" onSubmit={formHandler}>

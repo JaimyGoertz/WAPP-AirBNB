@@ -56,6 +56,7 @@ namespace Backend
             services.AddTransient<IChartsRepository, ChartsRepository>();
             services.AddTransient<IListingsCachingService, ListingsChachingService>();
             services.AddTransient<INeighbourhoodCachingService, NeighbourhoodCachingService>();
+            services.AddTransient<IChartsCachingService, ChartsCachingService>();
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
         }
 

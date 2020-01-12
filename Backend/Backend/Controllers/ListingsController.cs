@@ -27,7 +27,22 @@ namespace Backend.Controllers
         [HttpGet("locations")]
         public async Task<string> GetLocations()
         {
-            return await _listingsRepository.GetLocations();
+            var stopwatch = Stopwatch.StartNew();
+            if (_listingsCachingService.CachedAvailable())
+            {
+                var result = _listingsCachingService.GetCachedLocations();
+
+                stopwatch.Stop();
+                Debug.WriteLine("Listings time elapsed CACHE: " + stopwatch.Elapsed);
+
+                return result;
+            }
+            var locations = await _listingsRepository.GetLocations();
+            _listingsCachingService.SetCachedLocations(locations);
+
+            stopwatch.Stop();
+            Debug.WriteLine("Listings time elapsed DB: " + stopwatch.Elapsed);
+            return locations;
         }
 
         [HttpGet("details/{id}")]
@@ -41,8 +56,23 @@ namespace Backend.Controllers
         public async Task<IEnumerable<Neighbourhoods>> Getneighbourhoods()
         {
 
+            var stopwatch = Stopwatch.StartNew();
+            if (_neighbourhoodCachingService.CachedAvailable())
+            {
+                var result = await _neighbourhoodCachingService.GetCachedNeighbourhoods();
 
-            return await _listingsRepository.GetNeighbourhoods();
+                stopwatch.Stop();
+                Debug.WriteLine("Neighbourhoods time elapsed CACHE: " + stopwatch.Elapsed);
+
+                return result;
+            }
+            var neighbourhoods = await _listingsRepository.GetNeighbourhoods();
+            _neighbourhoodCachingService.SetCachedNeighbourhoods(neighbourhoods);
+
+            stopwatch.Stop();
+            Debug.WriteLine("Neighbourhoods time elapsed DB: " + stopwatch.Elapsed);
+
+            return neighbourhoods;
         }
 
         [HttpPost("filter")]

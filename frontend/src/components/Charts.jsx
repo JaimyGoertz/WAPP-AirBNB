@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavBar } from './NavBar';
-import { Link } from 'react-router-dom';
 import { getChartReviewAction, getChartAvailabilityAction } from '../actions/ChartsAction';
 import '../styles/Home.scss';
 import { Bar, Line } from 'react-chartjs-2';
@@ -25,7 +24,7 @@ class ChartsUI extends Component {
 	}
 
 	dynamicColors = function(arraylength) {
-		var array = new Array();
+		var array = [];
 		for (var i = 0; i < arraylength; i++) {
 			var r = Math.floor(Math.random() * 255);
 			var g = Math.floor(Math.random() * 255);

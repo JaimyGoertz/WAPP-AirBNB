@@ -22,12 +22,12 @@ export function neighbourhoodsChangeAction(neighbourhood) {
 export function clickFilterButtonAction(neighbourhood, priceParam, reviewParam) {
 	let price = 0;
 	let review = 0;
-	if (priceParam != undefined) {
+	if (priceParam !== undefined) {
 		price = parseInt(priceParam);
 	} else {
 		price = 100000;
 	}
-	if (reviewParam != undefined) {
+	if (reviewParam !== undefined) {
 		review = parseInt(reviewParam);
 	} else {
 		review = 0;
